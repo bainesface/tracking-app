@@ -1,12 +1,8 @@
-const { sendUser } = require('../models/authModel');
+const { createUser } = require('../models/authModel');
 
 exports.postUser = (req, res, next) => {
-  console.log('in auth controller');
-  sendUser();
-  res.send('you made a post request');
-};
-
-exports.getUser = (req, res, next) => {
-  console.log('in auth controller');
-  res.send('hiyaaaaa!');
+  const { email, password } = req.body;
+  createUser(email, password).then(() => {
+    res.sendStatus(201);
+  });
 };
