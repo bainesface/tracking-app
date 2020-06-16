@@ -3,9 +3,9 @@ const app = express();
 const mongoose = require('mongoose');
 const { username, password } = require('../config');
 
-const mongoUri = `mongodb+srv://${username}:${password}@cluster0-lcvvk.mongodb.net/test?retryWrites=true&w=majority`;
+const mongoUri = `mongodb + srv://${username}:${password}@cluster0-lcvvk.mongodb.net/<dbname>?retryWrites=true&w=majority`;
 
-mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongoUri, { useNewUrlParser: true, useCreateIndex: true });
 
 mongoose.connection.on('connected', () => {
   console.log('connected to mongo instance');
