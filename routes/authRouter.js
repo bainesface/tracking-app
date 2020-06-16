@@ -1,12 +1,13 @@
 const express = require('express');
 const authRouter = express.Router();
-const { postUser, getUser } = require('../controllers/authController');
+const { postUser } = require('../controllers/authController');
+const { send405Error } = require('../errors');
 
 authRouter
   .route('/', () => {
     console.log('in auth router');
   })
-  .get(getUser)
-  .post(postUser);
+  .post(postUser)
+  .all(send405Error);
 
 module.exports = authRouter;

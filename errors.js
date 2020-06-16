@@ -12,7 +12,7 @@ const mongoErrorHandler = (err, req, res, next) => {
     const mongoErrors = {
       11000: {
         status: 400,
-        msg: 'Username already exists!',
+        msg: 'email already exists!',
       },
     };
     res
