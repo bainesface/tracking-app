@@ -18,6 +18,7 @@ exports.sendToken = (req, res, next) => {
     .then(([passwordMatch, user]) => {
       if (passwordMatch) {
         const token = jwt.sign({ userId: user.id }, secretKey);
+
         res.status(200).send({ token });
       } else {
         return Promise.reject({ status: 401, msg: 'invalid password' });
@@ -35,14 +36,16 @@ exports.validateToken = (req, res, next) => {
 
   const token = authorization.split(' ')[1];
 
-  jwt.verify(token, secretKey, async (error, payload) => {
-    if (error) {
-      return res.status(401).send({ msg: 'You must be logged in' });
-    }
-    const { userId } = payload;
-    const user = await User.findById(userId);
-    req.user = user;
+  jwt
+    .verify(token, secretKey, async (error, payload) => {
+      if (error) {
+        return res.status(401).send({ msg: 'You must be logged in' });
+      }
+      const { userId } = payload;
+      const user = await User.findById(userId);
+      req.user = user;
 
-    next();
-  });
+      next();
+    })
+    .catch(next);
 };

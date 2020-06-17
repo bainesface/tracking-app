@@ -96,18 +96,6 @@ describe('/', () => {
     });
   });
   describe('/user', () => {
-    beforeEach(() => {
-      request2
-        .post('/login')
-        .send({
-          email: 'test@test.com',
-          password: 'password',
-        })
-        .expect(200)
-        .then(({ body: { token } }) => {
-          request2.set('Authorization', `Bearer ${token}`);
-        });
-    });
     it('GET: responds with status code 200 and the users email when authenticated', () => {
       return request2
         .get('/user')

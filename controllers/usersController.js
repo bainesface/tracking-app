@@ -11,5 +11,6 @@ exports.postUser = (req, res, next) => {
 
 exports.getUser = (req, res, next) => {
   const { email } = req.user;
+
   res.status(200).send({ msg: `User email: ${email}` });
 };
