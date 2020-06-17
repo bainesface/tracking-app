@@ -1,8 +1,10 @@
 const express = require('express');
 const apiRouter = express.Router();
 const authRouter = require('./authRouter');
+const usersRouter = require('./usersRouter');
 const { send405Error } = require('../errors');
 
-apiRouter.use('/signup', authRouter).all(send405Error);
+apiRouter.use('/login', authRouter).all(send405Error);
+apiRouter.use('/signup', usersRouter).all(send405Error);
 
 module.exports = apiRouter;

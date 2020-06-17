@@ -22,7 +22,7 @@ let mongoUri;
 
 ENV === 'test'
   ? (mongoUri = 'mongodb://localhost:27017/test')
-  : (mongoUri = `mongodb+srv://${mongoUsername}:${mongoPassword}@cluster0-1ez75.mongodb.net/test?retryWrites=true&w=majority`);
+  : (mongoUri = `mongodb+srv://${mongoUsername}:${mongoPassword}@cluster0-1ez75.mongodb.net/users?retryWrites=true&w=majority`);
 
 mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
 
