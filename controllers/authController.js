@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const jwt = require('jsonwebtoken');
 const { secretKey } = require('../config');
+const bcrypt = require('bcrypt');
 
 exports.sendToken = (req, res, next) => {
   const { email, password } = req.body;
@@ -10,11 +11,16 @@ exports.sendToken = (req, res, next) => {
     .then((user) => {
       if (!user) {
         return Promise.reject({ status: 401, msg: 'email does not exist' });
-      } else if (user.password !== password) {
-        return Promise.reject({ status: 401, msg: 'invalid password' });
       } else {
+        return Promise.all([bcrypt.compare(password, user.password), user]);
+      }
+    })
+    .then(([passwordMatch, user]) => {
+      if (passwordMatch) {
         const token = jwt.sign({ userId: user.id }, secretKey);
         res.status(200).send({ token });
+      } else {
+        return Promise.reject({ status: 401, msg: 'invalid password' });
       }
     })
     .catch(next);
@@ -36,6 +42,7 @@ exports.validateToken = (req, res, next) => {
     const { userId } = payload;
     const user = await User.findById(userId);
     req.user = user;
+
     next();
   });
 };

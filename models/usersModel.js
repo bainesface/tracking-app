@@ -1,14 +1,15 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const bcrypt = require('bcrypt');
 
 exports.createUser = (email, password) => {
-  const user = new User({ email, password });
-  return user.save();
-};
-
-exports.fetchUser = (userId) => {
-  console.log(userId, 'id fetch');
-  const user = User.findById(userId).then((user) => {
-    console.log(user);
-  });
+  return bcrypt
+    .hash(password, 12)
+    .then((hashedPassword) => {
+      const user = new User({ email: email, password: hashedPassword });
+      return user.save();
+    })
+    .then((data) => {
+      return data;
+    });
 };
