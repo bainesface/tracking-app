@@ -7,7 +7,6 @@ const customErrorHandler = (err, req, res, next) => {
 };
 
 const mongoErrorHandler = (err, req, res, next) => {
-  console.log(err.code);
   if (err.code !== undefined) {
     const mongoErrors = {
       11000: {

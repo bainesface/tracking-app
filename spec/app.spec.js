@@ -114,4 +114,48 @@ describe('/', () => {
         });
     });
   });
+  describe('/tracks', () => {
+    it('GET: returns status code 200 and the information about stored tracks', () => {
+      return request2
+        .get('/tracks')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).to.be.an('array');
+        });
+    });
+    it('GET: responds with status code 401 and relevant message when authorization has not occurred', () => {
+      return request2
+        .get('/tracks')
+        .set('Authorization', '')
+        .expect(401)
+        .then(({ body }) => {
+          expect(body.msg).to.equal('You must be logged in');
+        });
+    });
+    it('POST: responds with status 201 and information about the track posted', () => {
+      return request2
+        .post('/tracks')
+        .send({
+          name: "Sarah's track",
+          locations: [
+            {
+              timestamp: 1234,
+              coords: {
+                latitude: 8773,
+                longitude: 8554,
+                altitude: 3836,
+                accuracy: 90,
+                heading: 567,
+                speed: 3,
+              },
+            },
+          ],
+        })
+        .expect(201)
+        .then(({ body }) => {
+          expect(body).to.be.an('object');
+          expect(body).to.include.keys('name', 'userId', 'locations');
+        });
+    });
+  });
 });

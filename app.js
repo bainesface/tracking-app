@@ -1,4 +1,5 @@
 require('./db/user');
+require('./db/track');
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
