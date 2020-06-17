@@ -94,12 +94,35 @@ describe('/', () => {
           expect(body.msg).to.equal('invalid password');
         });
     });
-    it('GET: responds with status 200 and message to say in the function', () => {
-      return request(app)
-        .get('/login')
+  });
+  describe('/user', () => {
+    beforeEach(() => {
+      request2
+        .post('/login')
+        .send({
+          email: 'test@test.com',
+          password: 'password',
+        })
+        .expect(200)
+        .then(({ body: { token } }) => {
+          request2.set('Authorization', `Bearer ${token}`);
+        });
+    });
+    it('GET: responds with status code 200 and the users email when authenticated', () => {
+      return request2
+        .get('/user')
         .expect(200)
         .then(({ body }) => {
-          expect(body.msg).to.equal('in get user');
+          expect(body.msg).to.equal('User email: test@test.com');
+        });
+    });
+    it('GET: responds with status code 401 and relevant message when authorization has not occurred', () => {
+      return request2
+        .get('/user')
+        .set('Authorization', '')
+        .expect(401)
+        .then(({ body }) => {
+          expect(body.msg).to.equal('You must be logged in');
         });
     });
   });

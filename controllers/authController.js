@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const jwt = require('jsonwebtoken');
+const { secretKey } = require('../config');
 
 exports.sendToken = (req, res, next) => {
-  console.log('in send token');
   const { email, password } = req.body;
 
   return User.findOne({ email })
@@ -13,7 +13,7 @@ exports.sendToken = (req, res, next) => {
       } else if (user.password !== password) {
         return Promise.reject({ status: 401, msg: 'invalid password' });
       } else {
-        const token = jwt.sign({ userId: user.id }, 'MY_SECRET_KEY');
+        const token = jwt.sign({ userId: user.id }, secretKey);
         res.status(200).send({ token });
       }
     })
@@ -22,15 +22,20 @@ exports.sendToken = (req, res, next) => {
 
 exports.validateToken = (req, res, next) => {
   const { authorization } = req.headers;
+
   if (!authorization) {
     return res.status(401).send({ msg: 'You must be logged in' });
   }
-  console.log(authorization);
-  const token = authorization.replace('Bearer ', '');
-  console.log(token);
-  jwt.verify(token, 'MY_SECRET_KEY', (error, res) => {
+
+  const token = authorization.split(' ')[1];
+
+  jwt.verify(token, secretKey, async (error, payload) => {
     if (error) {
       return res.status(401).send({ msg: 'You must be logged in' });
-    } else next();
+    }
+    const { userId } = payload;
+    const user = await User.findById(userId);
+    req.user = user;
+    next();
   });
 };

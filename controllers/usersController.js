@@ -10,6 +10,6 @@ exports.postUser = (req, res, next) => {
 };
 
 exports.getUser = (req, res, next) => {
-  console.log('in get user');
-  res.status(200).send({ msg: 'in get user' });
+  const { email } = req.user;
+  res.status(200).send({ msg: `User email: ${email}` });
 };
