@@ -113,6 +113,18 @@ describe('/', () => {
           expect(body.msg).to.equal('You must be logged in');
         });
     });
+    it('status: 405', () => {
+      const invalidMethods = ['patch', 'put', 'post', 'delete'];
+      const methodPromises = invalidMethods.map((method) => {
+        return request(app)
+          [method]('/user')
+          .expect(405)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal('Method not allowed');
+          });
+      });
+      return Promise.all(methodPromises);
+    });
   });
   describe('/tracks', () => {
     it('GET: returns status code 200 and the information about stored tracks', () => {
@@ -156,6 +168,18 @@ describe('/', () => {
           expect(body).to.be.an('object');
           expect(body).to.include.keys('name', 'userId', 'locations');
         });
+    });
+    it('status: 405', () => {
+      const invalidMethods = ['patch', 'put', 'delete'];
+      const methodPromises = invalidMethods.map((method) => {
+        return request(app)
+          [method]('/tracks')
+          .expect(405)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal('Method not allowed');
+          });
+      });
+      return Promise.all(methodPromises);
     });
   });
 });

@@ -7,8 +7,7 @@ const { sendToken } = require('../controllers/authController');
 
 apiRouter.post('/login', sendToken).all(send405Error);
 
-apiRouter.use('/', usersRouter).all(send405Error);
-
 apiRouter.use('/tracks', trackRouter).all(send405Error);
+apiRouter.use('/', usersRouter);
 
 module.exports = apiRouter;
