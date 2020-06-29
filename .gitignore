@@ -1,3 +1,4 @@
 *node_modules*
 *config*
 *.history*
+*key.js*

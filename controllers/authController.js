@@ -1,8 +1,17 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const jwt = require('jsonwebtoken');
-const { secretKey } = require('../key');
+//const { secretKey } = require('../key');
 const bcrypt = require('bcrypt');
+
+let key;
+
+if (!process.env.SECRET_KEY) {
+  const { secretKey } = require('../config');
+  key = secretKey;
+} else {
+  key = process.env.SECRET_KEY;
+}
 
 exports.sendToken = (req, res, next) => {
   const { email, password } = req.body;
@@ -17,7 +26,7 @@ exports.sendToken = (req, res, next) => {
     })
     .then(([passwordMatch, user]) => {
       if (passwordMatch) {
-        const token = jwt.sign({ userId: user.id }, secretKey);
+        const token = jwt.sign({ userId: user.id }, key);
 
         res.status(200).send({ token });
       } else {
@@ -37,7 +46,7 @@ exports.validateToken = (req, res, next) => {
   const token = authorization.split(' ')[1];
 
   jwt
-    .verify(token, secretKey, async (error, payload) => {
+    .verify(token, key, async (error, payload) => {
       if (error) {
         return res.status(401).send({ msg: 'You must be logged in' });
       }
