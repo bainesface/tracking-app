@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const apiRouter = require('./routes/apiRouter');
+const cors = require('cors'); //cross-origin resource sharing
 const ENV = process.env.NODE_ENV || 'development';
 const { customErrorHandler, mongoErrorHandler } = require('./errors');
 
@@ -23,7 +24,7 @@ let mongoUri;
 
 ENV === 'test'
   ? (mongoUri = 'mongodb://localhost:27017/test')
-  : (mongoUri = `mongodb+srv://${mongoUsername}:${mongoPassword}@cluster0-1ez75.mongodb.net/users?retryWrites=true&w=majority`);
+  : (mongoUri = `mongodb+srv://${mongoUsername}:${mongoPassword}@cluster0-1ez75.mongodb.net/production?retryWrites=true&w=majority`);
 
 mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -37,6 +38,7 @@ mongoose.connection.on('error', (err) => {
   console.error('error connecting to mongo', err);
 });
 
+app.use(cors());
 app.use(express.json());
 app.use('/', apiRouter);
 
