@@ -2,6 +2,8 @@
 
 Backend RESTful API for Tracks, serving up endpoints relating to storing user data, logging in with JWT Web Tokens, storing and fetching tracks data.
 
+The hosted version can be found [here](https://tracks-tracking-app.herokuapp.com/).
+
 ## Getting Started
 
 ### Prerequisites
