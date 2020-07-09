@@ -16,7 +16,10 @@ describe('/', () => {
       return request(app)
         .post('/signup')
         .send({ email: 'test@test.com', password: 'password' })
-        .expect(201);
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.msg).to.equal('user registered');
+        });
     });
   });
   describe('/signup - errors', () => {
@@ -29,7 +32,7 @@ describe('/', () => {
           expect(error.body.msg).to.equal('email already exists!');
         });
     });
-    it('POST: return status code ... and the relevant error message when an attempt to sign up without the required information', () => {
+    it('POST: return status code 500 and the relevant error message when an attempt to sign up without the required information', () => {
       return request(app).post('/signup').send({}).expect(500);
     });
     it('status: 405', () => {

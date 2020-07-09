@@ -2,8 +2,8 @@ const { createUser } = require('../models/usersModel');
 
 exports.postUser = (req, res, next) => {
   const { email, password } = req.body;
-  createUser(email, password)
-    .then((data) => {
+  return createUser(email, password)
+    .then((newUser) => {
       res.status(201).send({ msg: 'user registered' });
     })
     .catch(next);

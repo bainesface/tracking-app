@@ -9,7 +9,7 @@ exports.createUser = (email, password) => {
       const user = new User({ email: email, password: hashedPassword });
       return user.save();
     })
-    .then((data) => {
-      return data;
+    .then((newUser) => {
+      return newUser;
     });
 };
