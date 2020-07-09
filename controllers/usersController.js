@@ -3,8 +3,8 @@ const { createUser } = require('../models/usersModel');
 exports.postUser = (req, res, next) => {
   const { email, password } = req.body;
   createUser(email, password)
-    .then(() => {
-      res.sendStatus(201);
+    .then((data) => {
+      res.status(201).send({ msg: 'user registered' });
     })
     .catch(next);
 };
